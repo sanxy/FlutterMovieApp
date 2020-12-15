@@ -10,6 +10,9 @@ class MovieDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Movie Details"),
+        ),
       body: ListView(
         scrollDirection: Axis.vertical,
         children: <Widget>[

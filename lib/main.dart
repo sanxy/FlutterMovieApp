@@ -47,9 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   List<Movie> movies = Movie.getMovie();
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,32 +64,37 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: ListView.builder(
-          itemBuilder: (BuildContext context,int index) {
-            return Stack(
-              alignment: Alignment.centerLeft,
-              children: <Widget>[
-                InkWell(
-                  child: MovieList(movies[index], index),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> MovieDetailsPage(movie: movies[index],)));
-                  },
-                ),
-                MovieListAvatar(movies[index],index)
-              ],
-            );
-          },
-          itemCount: movies.length,
-        )
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return Stack(
+            alignment: Alignment.centerLeft,
+            children: <Widget>[
+              InkWell(
+                splashColor: Colors.white30,
+                child: MovieList(movies[index], index),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => MovieDetailsPage(
+                                movie: movies[index],
+                              )));
+                },
+              ),
+              MovieListAvatar(movies[index], index)
+            ],
+          );
+        },
+        itemCount: movies.length,
+      )), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  Widget MovieList(Movie movie,int index) {
+  Widget MovieList(Movie movie, int index) {
     return Container(
-      height: MediaQuery.of(context).size.height*0.2,
+      height: MediaQuery.of(context).size.height * 0.2,
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(10),
       child: Card(
@@ -99,18 +102,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListTile(
           title: Text(
             "${movie.title} ( ${movie.year} )",
-            style: TextStyle(
-              fontSize: 15.0,
-              fontWeight: FontWeight.bold
-            ),
+            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
           ),
           subtitle: Padding(
-            padding: const EdgeInsets.only(top:10.0),
+            padding: const EdgeInsets.only(top: 10.0),
             child: Text(
               "Genre : ${movie.genre}",
-              style: TextStyle(
-                fontSize: 15.0
-              ),
+              style: TextStyle(fontSize: 15.0),
             ),
           ),
         ),
@@ -123,15 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
       height: 100,
       width: 100,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(
-            movie.images[0]
-          ),
-          fit: BoxFit.cover
-        ),
-        shape: BoxShape.circle
-      ),
+          image: DecorationImage(
+              image: NetworkImage(movie.images[0]), fit: BoxFit.cover),
+          shape: BoxShape.circle),
     );
   }
 }
-
