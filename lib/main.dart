@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/Model/movie.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import 'movie_details.dart';
+
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Movies App'),
     );
   }
 }
@@ -46,18 +47,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  List<Movie> movies = Movie.getMovie();
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,38 +68,70 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: ListView.builder(
+          itemBuilder: (BuildContext context,int index) {
+            return Stack(
+              alignment: Alignment.centerLeft,
+              children: <Widget>[
+                InkWell(
+                  child: MovieList(movies[index], index),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> MovieDetailsPage(movie: movies[index],)));
+                  },
+                ),
+                MovieListAvatar(movies[index],index)
+              ],
+            );
+          },
+          itemCount: movies.length,
+        )
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  Widget MovieList(Movie movie,int index) {
+    return Container(
+      height: MediaQuery.of(context).size.height*0.2,
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.all(10),
+      child: Card(
+        margin: EdgeInsets.only(left: 80),
+        child: ListTile(
+          title: Text(
+            "${movie.title} ( ${movie.year} )",
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top:10.0),
+            child: Text(
+              "Genre : ${movie.genre}",
+              style: TextStyle(
+                fontSize: 15.0
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget MovieListAvatar(Movie movie, int index) {
+    return Container(
+      height: 100,
+      width: 100,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(
+            movie.images[0]
+          ),
+          fit: BoxFit.cover
+        ),
+        shape: BoxShape.circle
+      ),
+    );
+  }
 }
+
